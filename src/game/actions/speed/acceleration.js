@@ -1,8 +1,6 @@
 import store from "store";
-import { setStrokeSpeed, randomStrokeSpeed } from "game/utils/strokeSpeed";
-import createNotification, {
-  dismissNotification
-} from "engine/createNotification";
+import { getRandomStrokeSpeed, setStrokeSpeed } from "game/utils/strokeSpeed";
+import createNotification, { dismissNotification } from "engine/createNotification";
 import delay from "utils/delay";
 import play from "engine/audio";
 import audioLibrary from "audio";
@@ -32,7 +30,7 @@ const acceleration = async () => {
   await delay(2 * 1000);
 
   dismissNotification(nid);
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
   await delay(5 * 1000);
 };
 acceleration.label = "Acceleration Strokes";

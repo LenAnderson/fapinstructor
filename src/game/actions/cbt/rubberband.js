@@ -1,10 +1,8 @@
 import store from "store";
-import createNotification, {
-  dismissNotification
-} from "engine/createNotification";
+import createNotification, { dismissNotification } from "engine/createNotification";
 import { getRandomBoolean, getRandomInclusiveInteger } from "utils/math";
 import { strokerRemoteControl } from "game/loops/strokerLoop";
-import { setStrokeSpeed, randomStrokeSpeed } from "game/utils/strokeSpeed";
+import { getRandomStrokeSpeed, setStrokeSpeed } from "game/utils/strokeSpeed";
 import delay from "utils/delay";
 
 export const addRubberBand = async () => {
@@ -71,7 +69,7 @@ export const snapRubberBand = async () => {
   if (store.game.rubberBands > 0) {
     const snapCount = getRandomInclusiveInteger(3, 10);
     const delayTime = 2;
-    const snapSpeed = randomStrokeSpeed({ fast: 2 });
+    const snapSpeed = getRandomStrokeSpeed({ fast: 2 });
     const snapTime = snapCount / snapSpeed;
     const totalTime = snapTime + delayTime;
 
@@ -93,10 +91,10 @@ export const snapRubberBand = async () => {
 
     createNotification(`Back to stroking`);
 
-    setStrokeSpeed(randomStrokeSpeed());
+    setStrokeSpeed(getRandomStrokeSpeed());
   }
 };
-snapRubberBand.label = "Rubberband Snaps"
+snapRubberBand.label = "Rubberband Snaps";
 
 const randomRubberBandAdjustment = async () => {
   if (getRandomBoolean()) {

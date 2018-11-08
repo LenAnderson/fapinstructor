@@ -1,12 +1,13 @@
 import store from "store";
-import createNotification, {dismissNotification} from "engine/createNotification";
-import {randomStrokeSpeed, setStrokeSpeed} from "game/utils/strokeSpeed";
+import createNotification, { dismissNotification } from "engine/createNotification";
+import { getRandomStrokeSpeed, setStrokeSpeed } from "game/utils/strokeSpeed";
 import delay from "utils/delay";
 import play from "engine/audio";
-import audioLibrary, {getRandomAudioVariation} from "audio";
-import {strokerRemoteControl} from "game/loops/strokerLoop";
+import audioLibrary, { getRandomAudioVariation } from "audio";
+import { strokerRemoteControl } from "game/loops/strokerLoop";
 import elapsedGameTime from "game/utils/elapsedGameTime";
-import {nextSlide} from "game/utils/fetchPictures";
+import { nextSlide } from "game/utils/fetchPictures";
+import { setRandomStrokeStyle } from "game/enums/StrokeStyle";
 
 export const shouldRuin = () => {
   const {
@@ -60,7 +61,8 @@ export const ruinedOrgasm = async () => {
 
   await delay(ruinCooldown * 1000);
 
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
+  await setRandomStrokeStyle();
   strokerRemoteControl.play();
   createNotification("Start stroking again");
 

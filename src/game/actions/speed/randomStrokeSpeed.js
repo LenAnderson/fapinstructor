@@ -1,7 +1,4 @@
-import {
-  setStrokeSpeed,
-  randomStrokeSpeed as randomStrokeSpeedUtil
-} from "game/utils/strokeSpeed";
+import { getRandomStrokeSpeed as randomStrokeSpeedUtil, setStrokeSpeed } from "game/utils/strokeSpeed";
 import createNotification from "engine/createNotification";
 import { round } from "utils/math";
 

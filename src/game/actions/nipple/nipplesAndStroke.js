@@ -1,6 +1,6 @@
 import store from "store";
 import createNotification from "engine/createNotification";
-import { randomStrokeSpeed, setStrokeSpeed, } from "game/utils/strokeSpeed";
+import { getRandomStrokeSpeed, setStrokeSpeed, } from "game/utils/strokeSpeed";
 import { getRandomRubStrength } from "game/enums/RubStrength"
 import { getRandomLeftOrRight } from "game/enums/HandSide";
 import { getRandomInclusiveInteger } from "utils/math";
@@ -42,7 +42,7 @@ const nipplesAndStroke = async () => {
 
   await delay((taskDuration + 1) * 1000);
 
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
   await setStrokeStyle(style);
 
 };

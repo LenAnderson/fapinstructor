@@ -1,12 +1,12 @@
 import createNotification from "engine/createNotification";
-import { setStrokeSpeed, randomStrokeSpeed } from "game/utils/strokeSpeed";
+import { getRandomStrokeSpeed, setStrokeSpeed } from "game/utils/strokeSpeed";
 import { getRandomInclusiveInteger } from "utils/math";
 import delay from "utils/delay";
 
 export const flickCockHead = async () => {
   const flickCount = getRandomInclusiveInteger(3, 6);
   const delayTime = 2;
-  const flickSpeed = randomStrokeSpeed({ fast: 2 });
+  const flickSpeed = getRandomStrokeSpeed({ fast: 2 });
   const flickTime = flickCount / flickSpeed;
   const totalTime = flickTime + delayTime;
 
@@ -25,14 +25,14 @@ export const flickCockHead = async () => {
 
   createNotification(`Back to stroking`);
 
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
 };
 flickCockHead.label = "Flick Cock Head";
 
 export const flickNipples = async () => {
   const flickCount = getRandomInclusiveInteger(3, 6);
   const delayTime = 2;
-  const flickSpeed = randomStrokeSpeed({ fast: 2 });
+  const flickSpeed = getRandomStrokeSpeed({ fast: 2 });
   const flickTime = flickCount / flickSpeed;
   const totalTime = flickTime + delayTime;
 
@@ -51,6 +51,6 @@ export const flickNipples = async () => {
 
   createNotification(`Back to stroking`);
 
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
 };
 flickNipples.label = "Flick Nipples";

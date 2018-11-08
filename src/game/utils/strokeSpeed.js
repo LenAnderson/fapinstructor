@@ -1,5 +1,5 @@
 import store from "store";
-import {clamp, getRandomArbitrary} from "utils/math";
+import { clamp, getRandomArbitrary } from "utils/math";
 
 /**
  * Generates a random stroke speed
@@ -16,7 +16,7 @@ import {clamp, getRandomArbitrary} from "utils/math";
  *
  * @returns {Number} A random stroke speed.
  */
-export const randomStrokeSpeed = ({ slow = 2, fast = 1.4 } = {}) => {
+export const getRandomStrokeSpeed = ({ slow = 2, fast = 1.4 } = {}) => {
   const { slowestStrokeSpeed, fastestStrokeSpeed } = store.config;
 
   const slowestAdjustedSpeed =

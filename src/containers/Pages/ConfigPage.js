@@ -23,6 +23,9 @@ import copyToClipboard from "utils/copyToClipboard";
 import connect from "hoc/connect";
 import { getStrokeStyleName, StrokeStyleArray, StrokeStyleEnum, StrokeStyleString } from "game/enums/StrokeStyle";
 
+
+const ONE_HUNDRED_PERCENT = 100;  // Maximum Percentage that Can be achieved
+
 const styles = theme => ({
   control: {
     width: "100%"
@@ -103,10 +106,10 @@ class ConfigPage extends React.Component {
           delete errors["minimumGameTime"];
           delete errors["maximumGameTime"];
           if (!value || store.config.minimumGameTime < 3) {
-            errors["minimumGameTime"] = "Minimum Game Time must be greater than 3 minutes";
+            errors["minimumGameTime"] = "Minimum Game Time must be at least 3 minutes";
           }
           if (!value || value < 5) {
-            errors["maximumGameTime"] = "Maximum Game Time must be greater than 5 minutes";
+            errors["maximumGameTime"] = "Maximum Game Time must be at least 5 minutes";
           }
           if (parseInt(store.config.maximumGameTime, 10) < parseInt(store.config.minimumGameTime, 10)) {
             errors["minimumGameTime"] = "Minimum Game Time has to be smaller than Maximum Game Time";
@@ -133,7 +136,7 @@ class ConfigPage extends React.Component {
         case "ruinedProbability": {
           delete errors[name];
           value = parseInt(value, 10);
-          if (isNaN(value) || value < 0 || value > 100) {
+          if (isNaN(value) || value < 0 || value > ONE_HUNDRED_PERCENT) {
             errors[name] = "Please insert a valid number between 0 and 100";
           }
           break;
@@ -147,7 +150,7 @@ class ConfigPage extends React.Component {
               ruinedProbability,
             }
           } = store;
-          if (parseInt(deniedProbability, 10) + parseInt(ruinedProbability, 10) + parseInt(allowedProbability, 10) !== 100) {
+          if (parseInt(deniedProbability, 10) + parseInt(ruinedProbability, 10) + parseInt(allowedProbability, 10) !== ONE_HUNDRED_PERCENT) {
             errors.finalOrgasmRandom = "The probabilities have to sum up to 100%"
           }
           break;
@@ -250,7 +253,7 @@ class ConfigPage extends React.Component {
           }
           break;
         }
-        case "defaultStrokeStyle": { // New UI makes this case never happen :)
+        case "defaultStrokeStyle": { // New UI makes this error never happen :)
           delete errors[name];
           if (!store.config.tasks[StrokeStyleArray[value][0]]) {
             errors[name] = "You disabled '" + StrokeStyleString[value] + "' below. " +
@@ -266,8 +269,24 @@ class ConfigPage extends React.Component {
     return errors;
   };
 
-  handleChange = name => event => {
-    store.config[name] = event.target.value;
+  /**
+   * handles most changes by the user that can happen on the ConfigPage.
+   * It either casts the value by useing the specified function or does not cast anything if no cast function is specified.
+   *
+   * After every single change the complete Page is validated.
+   *
+   * @param name
+   *    the name of the variable in the location  **store.config.name**
+   * @param cast
+   *    a function that converts the input field's value to its intended type (e.g. Number, String, ...)
+   */
+  handleChange = (name, cast) => event => {
+    if (cast) {
+      store.config[name] = (cast)(event.target.value);
+    } else {
+      store.config[name] = event.target.value;
+    }
+
     this.setState({ errors: this.validateConfig() });
   };
 
@@ -305,30 +324,29 @@ class ConfigPage extends React.Component {
       } else {
         store.config.ruinedProbability = 0;
       }
-      // equalize share of options
+      // equalize share of options for initial display
       let sum = 0;
       for (let i = 1; i < options.length; i++) {
         let o = options[i];
-        store.config[o] = Math.floor(100 / options.length);
+        store.config[o] = Math.floor(ONE_HUNDRED_PERCENT / options.length);
         sum += store.config[o];
       }
-      store.config[options[0]] = 100 - sum;
+      store.config[options[0]] = ONE_HUNDRED_PERCENT - sum;
     }
-    else if (finalOrgasmAllowed) {
-      store.config.allowedProbability = 100;
-      store.config.deniedProbability = 0;
-      store.config.ruinedProbability = 0;
-    } else if (finalOrgasmDenied) {
-      store.config.allowedProbability = 100;
-      store.config.allowedProbability = 0;
-      store.config.deniedProbability = 100;
-      store.config.ruinedProbability = 0;
-    } else if (finalOrgasmRuined) {
-      store.config.allowedProbability = 100;
-      store.config.allowedProbability = 0;
-      store.config.deniedProbability = 0;
-      store.config.ruinedProbability = 100;
-
+    else {
+      if (finalOrgasmAllowed) {
+        store.config.allowedProbability = ONE_HUNDRED_PERCENT;
+        store.config.deniedProbability = 0;
+        store.config.ruinedProbability = 0;
+      } else if (finalOrgasmDenied) {
+        store.config.allowedProbability = 0;
+        store.config.deniedProbability = ONE_HUNDRED_PERCENT;
+        store.config.ruinedProbability = 0;
+      } else if (finalOrgasmRuined) {
+        store.config.allowedProbability = 0;
+        store.config.deniedProbability = 0;
+        store.config.ruinedProbability = ONE_HUNDRED_PERCENT;
+      }
     }
 
     this.setState({ errors: this.validateConfig() });
@@ -452,7 +470,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="slideDuration"
                       value={store.config.slideDuration}
-                      onChange={this.handleChange("slideDuration")}
+                      onChange={this.handleChange("slideDuration", Number)}
                       type="number"
                       inputProps={{ step: "1", min: "3" }}
                       endAdornment={
@@ -525,7 +543,7 @@ class ConfigPage extends React.Component {
                       id="minimumGameTime"
                       value={store.config.minimumGameTime}
                       required
-                      onChange={this.handleChange("minimumGameTime")}
+                      onChange={this.handleChange("minimumGameTime", Number)}
                       type="number"
                       inputProps={{ step: "1", min: "3" }}
                       endAdornment={
@@ -546,7 +564,7 @@ class ConfigPage extends React.Component {
                       id="maximumGameTime"
                       value={store.config.maximumGameTime}
                       required
-                      onChange={this.handleChange("maximumGameTime")}
+                      onChange={this.handleChange("maximumGameTime", Number)}
                       type="number"
                       inputProps={{ step: "1", min: "5" }}
                       endAdornment={
@@ -566,7 +584,7 @@ class ConfigPage extends React.Component {
               </Grid>
             </Group>
             <Group title="Orgasm">
-              <Grid container xs={12}>
+              <Grid container>
                 <Grid item xs={12}>
                   <FormControl
                     fullWidth
@@ -730,7 +748,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="maximumOrgasms"
                       value={store.config.maximumOrgasms}
-                      onChange={this.handleChange("maximumOrgasms")}
+                      onChange={this.handleChange("maximumOrgasms", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "1", min: "1" }}
@@ -770,9 +788,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="postOrgasmTortureMinimumTime"
                       value={store.config.postOrgasmTortureMinimumTime}
-                      onChange={this.handleChange(
-                        "postOrgasmTortureMinimumTime"
-                      )}
+                      onChange={this.handleChange("postOrgasmTortureMinimumTime", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "1", min: "3" }}
@@ -795,9 +811,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="postOrgasmTortureMaximumTime"
                       value={store.config.postOrgasmTortureMaximumTime}
-                      onChange={this.handleChange(
-                        "postOrgasmTortureMaximumTime"
-                      )}
+                      onChange={this.handleChange("postOrgasmTortureMaximumTime", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "1", min: "5" }}
@@ -819,7 +833,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="minimumRuinedOrgasms"
                       value={store.config.minimumRuinedOrgasms}
-                      onChange={this.handleChange("minimumRuinedOrgasms")}
+                      onChange={this.handleChange("minimumRuinedOrgasms", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "1", min: "0" }}
@@ -838,7 +852,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="maximumRuinedOrgasms"
                       value={store.config.maximumRuinedOrgasms}
-                      onChange={this.handleChange("maximumRuinedOrgasms")}
+                      onChange={this.handleChange("maximumRuinedOrgasms", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "1", min: "0" }}
@@ -857,7 +871,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="ruinCooldown"
                       value={store.config.ruinCooldown}
-                      onChange={this.handleChange("ruinCooldown")}
+                      onChange={this.handleChange("ruinCooldown", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "1", min: "0" }}
@@ -897,7 +911,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="minimumEdges"
                       value={store.config.minimumEdges}
-                      onChange={this.handleChange("minimumEdges")}
+                      onChange={this.handleChange("minimumEdges", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "1", min: "0" }}
@@ -914,7 +928,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="edgeCooldown"
                       value={store.config.edgeCooldown}
-                      onChange={this.handleChange("edgeCooldown")}
+                      onChange={this.handleChange("edgeCooldown", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "1", min: "0" }}
@@ -934,7 +948,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="edgeFrequency"
                       value={store.config.edgeFrequency}
-                      onChange={this.handleChange("edgeFrequency")}
+                      onChange={this.handleChange("edgeFrequency", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "1", min: "0" }}
@@ -959,7 +973,7 @@ class ConfigPage extends React.Component {
                     <InputLabel>Default Stroke Style</InputLabel>
                     <Select
                       value={store.config.defaultStrokeStyle}
-                      onChange={this.handleChange("defaultStrokeStyle")}
+                      onChange={this.handleChange("defaultStrokeStyle", Number)}
                     >
                       {Object.keys(StrokeStyleEnum).map(key => (
                         <MenuItem key={key} value={StrokeStyleEnum[key]}
@@ -977,7 +991,7 @@ class ConfigPage extends React.Component {
                     <InputLabel>Initial Grip Strength</InputLabel>
                     <Select
                       value={store.config.initialGripStrength}
-                      onChange={this.handleChange("initialGripStrength")}
+                      onChange={this.handleChange("initialGripStrength", Number)}
                     >
                       {Object.keys(GripStrengthEnum).map(key => (
                         <MenuItem key={key} value={GripStrengthEnum[key]}>
@@ -996,7 +1010,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="slowestStrokeSpeed"
                       value={store.config.slowestStrokeSpeed}
-                      onChange={this.handleChange("slowestStrokeSpeed")}
+                      onChange={this.handleChange("slowestStrokeSpeed", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "0.25", min: "0.25", max: "6" }}
@@ -1016,7 +1030,7 @@ class ConfigPage extends React.Component {
                     <Input
                       id="fastestStrokeSpeed"
                       value={store.config.fastestStrokeSpeed}
-                      onChange={this.handleChange("fastestStrokeSpeed")}
+                      onChange={this.handleChange("fastestStrokeSpeed", Number)}
                       fullWidth
                       type="number"
                       inputProps={{ step: "0.25", min: "0.25", max: "6" }}

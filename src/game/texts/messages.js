@@ -168,7 +168,9 @@ export const getRandom_orgasmInTime_message = () => {
 const orgasmInTime_messages = [
   "Orgasm now!",
   "I don't have time for your worthless cock. Cum. Now!",
-  "You will get punished if you don't cum now!"
+  "I don't have time for your worthless cock today. Cum. Now!",
+  "You will get punished if you don't cum now!",
+  "You will get punished if you don't cum right now!"
 ];
 /* ########################################### //
                        RUIN

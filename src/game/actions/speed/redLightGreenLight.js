@@ -1,14 +1,8 @@
 import store from "store";
-import {
-  setStrokeSpeed,
-  randomStrokeSpeed,
-  getAverageStrokeSpeed
-} from "game/utils/strokeSpeed";
-import createNotification, {
-  dismissNotification
-} from "engine/createNotification";
+import { getAverageStrokeSpeed, getRandomStrokeSpeed, setStrokeSpeed } from "game/utils/strokeSpeed";
+import createNotification, { dismissNotification } from "engine/createNotification";
 import delay from "utils/delay";
-import { getRandomInclusiveInteger, getRandomArbitrary } from "utils/math";
+import { getRandomArbitrary, getRandomInclusiveInteger } from "utils/math";
 import play from "engine/audio";
 import audioLibrary from "audio";
 
@@ -48,7 +42,7 @@ const redLightGreenLight = async () => {
   }
 
   dismissNotification(nid);
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
 };
 redLightGreenLight.label = "Red Light/Green Light";
 

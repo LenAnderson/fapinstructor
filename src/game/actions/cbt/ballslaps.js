@@ -1,6 +1,6 @@
 import store from "store";
 import createNotification from "engine/createNotification";
-import { setStrokeSpeed, randomStrokeSpeed } from "game/utils/strokeSpeed";
+import { getRandomStrokeSpeed, setStrokeSpeed } from "game/utils/strokeSpeed";
 import { getRandomInclusiveInteger } from "utils/math";
 import delay from "utils/delay";
 import play from "engine/audio";
@@ -9,7 +9,7 @@ import audioLibrary from "audio";
 const ballslaps = async () => {
   const ballSlapCount = getRandomInclusiveInteger(3, 10);
   const delayTime = 2;
-  const ballSlapSpeed = randomStrokeSpeed({ fast: 2 });
+  const ballSlapSpeed = getRandomStrokeSpeed({ fast: 2 });
   const ballSlapTime = ballSlapCount / ballSlapSpeed;
   const totalTime = ballSlapTime + delayTime;
 
@@ -32,7 +32,7 @@ const ballslaps = async () => {
 
   createNotification(`Back to stroking`);
 
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
 };
 ballslaps.label = "Ball slaps";
 

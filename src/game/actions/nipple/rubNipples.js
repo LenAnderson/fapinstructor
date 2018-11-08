@@ -1,6 +1,6 @@
 import store from "store";
 import createNotification from "engine/createNotification";
-import { randomStrokeSpeed, setStrokeSpeed, } from "game/utils/strokeSpeed";
+import { getRandomStrokeSpeed, setStrokeSpeed, } from "game/utils/strokeSpeed";
 import { getRandomRubStrength } from "game/enums/RubStrength"
 import { getRandomInclusiveInteger } from "utils/math";
 import delay from "utils/delay";
@@ -40,7 +40,7 @@ const rubNipples = async () => {
   await setStrokeStyleHandsOff();
   await delay(taskDuration * 1000);
 
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
   await setStrokeStyle(style);
 
 };

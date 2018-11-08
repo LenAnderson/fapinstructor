@@ -1,10 +1,6 @@
 import store from "store";
 import createNotification from "engine/createNotification";
-import {
-  setStrokeSpeed,
-  randomStrokeSpeed,
-  getAverageStrokeSpeed
-} from "game/utils/strokeSpeed";
+import { getAverageStrokeSpeed, getRandomStrokeSpeed, setStrokeSpeed } from "game/utils/strokeSpeed";
 import { getRandomInclusiveInteger } from "utils/math";
 import delay from "utils/delay";
 
@@ -47,7 +43,7 @@ const clusterStrokes = async () => {
     await delay(setGapTime * 1000);
   }
 
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
 };
 clusterStrokes.label = "Cluster Strokes";
 

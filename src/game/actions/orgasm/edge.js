@@ -2,7 +2,7 @@ import store from "store";
 import play from "engine/audio";
 import audioLibrary from "audio";
 import elapsedGameTime from "game/utils/elapsedGameTime";
-import { randomStrokeSpeed, setStrokeSpeed } from "game/utils/strokeSpeed";
+import { getRandomStrokeSpeed, setStrokeSpeed } from "game/utils/strokeSpeed";
 import { setDefaultGrip } from "game/actions/grip";
 import { setDefaultStrokeStyle } from "game/enums/StrokeStyle";
 import createNotification, { dismissNotification } from "engine/createNotification";
@@ -84,15 +84,17 @@ export const edging = async time => {
  * The whole cooldown stuff after edging and setting up the stroking task again.
  */
 export const stopEdging = async () => {
-  const { config: { edgeCooldown } } = store;
+  let edgeCooldown = parseInt(store.config.edgeCooldown, 10);
   if (store.game.orgasm && !store.game.edgingLadder) {
 
   } else {
 
     strokerRemoteControl.pause();
-    await handsOff(edgeCooldown + getRandomInclusiveInteger(0, edgeCooldown));
+    //Just to make it a little bit random. So one does not get exactly XY seconds cooldown every time.
+    let approx = getRandomInclusiveInteger(Math.floor(edgeCooldown / 2), Math.floor(edgeCooldown * 3 / 2));
+    await handsOff(approx);
 
-    setStrokeSpeed(randomStrokeSpeed());
+    setStrokeSpeed(getRandomStrokeSpeed());
 
     strokerRemoteControl.play();
 

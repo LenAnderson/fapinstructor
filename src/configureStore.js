@@ -38,7 +38,7 @@ const defaultConfig = {
   postOrgasmTortureMaximumTime: 90,
   advancedEdging: true,
   advancedOrgasm: true,
-  edgeCooldown: 5, // sec
+  edgeCooldown: 10, // sec
   edgeFrequency: 0, // percent
   ruinCooldown: 20, // sec
   slowestStrokeSpeed: 0.25, // sec

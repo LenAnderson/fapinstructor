@@ -1,6 +1,6 @@
 import store from "store";
 import createNotification from "engine/createNotification";
-import { setStrokeSpeed, randomStrokeSpeed } from "game/utils/strokeSpeed";
+import { getRandomStrokeSpeed, setStrokeSpeed } from "game/utils/strokeSpeed";
 import { getRandomInclusiveInteger } from "utils/math";
 import delay from "utils/delay";
 import play from "engine/audio";
@@ -17,13 +17,13 @@ const squeezeBalls = async () => {
     play(audioLibrary.SqueezeBalls);
   }
 
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
 
   await delay(time * 1000);
 
   createNotification(`Back to stroking`);
 
-  setStrokeSpeed(randomStrokeSpeed());
+  setStrokeSpeed(getRandomStrokeSpeed());
 };
 squeezeBalls.label = "Squeeze Balls";
 

@@ -1,6 +1,6 @@
 import store from "store";
 import ActionIterator from "engine/actionIterator";
-import { getRandomInclusiveInteger } from "utils/math";
+import { chance, getRandomInclusiveInteger } from "utils/math";
 import initializeActions from "game/actions/index";
 import determineEdge, { shouldEdge } from "./orgasm/edge";
 import ruin, { shouldRuin } from "game/actions/orgasm/ruin";
@@ -60,14 +60,14 @@ export const applyProbability = (actions, count = 0) => {
 
 
 /**
- * Determines whether the user should orgasm, edge or ruin. 
- * It is also responsible for determing following:
+ * Determines whether the user should orgasm, edge or ruin.
+ * It is also responsible for determining following:
  * - store.game.edgingLadder: we are in the middle of an edgingLadder, next action has to be next ladder rung.
  * - store.game.orgasm: we have passed the final edge and the next action has to be a game end.
- * If none of the above applies a random action from the
- * initial setup is chosen.
+ * - shouldOrgasm now only takes effect in 75% of all cases. Making the game end even more random.
+ * If none of the above applies a random action from the _initial setup_ is chosen.
  *
- * @since 02.09.2018
+ * @since 27.09.2018
  *
  * @returns {*} action - the next action that will be executed and displayed
  */
@@ -82,7 +82,11 @@ const generateAction = () => {
   }
   else if (shouldOrgasm()) {
     store.game.orgasm = true;
-    action = finalEdgeAndHold;
+    if (chance(75) && store.config.advancedOrgasm) {
+      action = finalEdgeAndHold;
+    } else {
+      action = getRandomGameEnd;
+    }
   }
   else if (shouldEdge()) {
     action = determineEdge;
