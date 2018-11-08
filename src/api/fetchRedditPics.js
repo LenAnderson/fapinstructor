@@ -2,6 +2,8 @@
 import fetchGfycat from "./fetchGfycat"
 import store from "store";
 import createNotification from "engine/createNotification";
+import fetchImgur from "./fetchImgur";
+import fetchImgurDirectLink from "./fetchImgur";
 
 let after = {};
 
@@ -24,6 +26,12 @@ const fetchRedditPics = id => {
             case "erome.com": {
               return null; // fetchErome(post.url)
             }
+            case "i.imgur.com": {
+              return fetchImgurDirectLink(post.url);
+            }
+            case "imgur.com": {
+              return fetchImgur(post.url);
+            }
             default: {
               return null;
             }
@@ -33,6 +41,7 @@ const fetchRedditPics = id => {
 
       return Promise.all(images.filter(image => !!image));
     })
+    .then(images=>images.flat())
     .catch((error) => {
       if(id && !store.config["failedIds"].includes(id)){
          const redditIds = store.config["redditId"];
