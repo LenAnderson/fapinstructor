@@ -46,9 +46,9 @@ const fetchRedditPics = id => {
         }
       );
 
-      return Promise.all(images.filter(image => !!image));
+      return Promise.all(images);
     })
-    .then(images=>images.flat())
+    .then(images=>images.flat().filter(image => !!image))
     .catch((error) => {
       if(id && !store.config["failedIds"].includes(id)){
          const redditIds = store.config["redditId"];
