@@ -32,6 +32,9 @@ const fetchRedditPics = id => {
             case "imgur.com": {
               return fetchImgur(post.url);
             }
+            case "i.redd.it": {
+              return post.url;
+            }
             default: {
               return null;
             }
