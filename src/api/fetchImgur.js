@@ -32,11 +32,15 @@ const fetchImgurAlbum = async (url) => {
         xhr.open('GET', `https://api.imgur.com/3/album/${id}`, true);
         xhr.setRequestHeader('Authorization', `Client-ID ${imgurClientId}`);
         xhr.addEventListener('load', ()=>{
-            let data = JSON.parse(xhr.responseText);
-            if (data.data.images.length > 0) {
-                resolve(data.data.images.map(it=>fetchImgurDirectLink(it.link)));
-            } else {
-                reject();
+            try {
+                let data = JSON.parse(xhr.responseText);
+                if (data.data.images.length > 0) {
+                    resolve(data.data.images.map(it=>fetchImgurDirectLink(it.link)));
+                } else {
+                    resolve();
+                }
+            } catch (ex) {
+                resolve();
             }
         });
         xhr.addEventListener('error', ()=>{
@@ -55,8 +59,12 @@ const fetchImgurPage = async (url) => {
         xhr.open('GET', `https://api.imgur.com/3/image/${id}`, true);
         xhr.setRequestHeader('Authorization', `Client-ID ${imgurClientId}`);
         xhr.addEventListener('load', ()=>{
-            let data = JSON.parse(xhr.responseText);
-            resolve(fetchImgurDirectLink(data.data.link));
+            try {
+                let data = JSON.parse(xhr.responseText);
+                resolve(fetchImgurDirectLink(data.data.link));
+            } catch (ex) {
+                resolve();
+            }
         });
         xhr.addEventListener('error', ()=>{
             resolve();
