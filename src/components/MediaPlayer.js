@@ -171,7 +171,7 @@ const isVideo = url =>
       .pop()
       .toUpperCase()
       .toUpperCase()
-  );
+  ) || url.includes('v.redd.it');
 
 const isYouTube = url => url.includes("www.youtube-nocookie.com");
 

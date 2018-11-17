@@ -4,6 +4,7 @@ import store from "store";
 import createNotification from "engine/createNotification";
 import fetchImgur from "./fetchImgur";
 import fetchImgurDirectLink from "./fetchImgur";
+import fetchVReddit from "./fetchVReddit";
 
 let after = {};
 
@@ -34,6 +35,9 @@ const fetchRedditPics = id => {
             }
             case "i.redd.it": {
               return post.url;
+            }
+            case "v.redd.it": {
+              return fetchVReddit(post);
             }
             default: {
               return null;
