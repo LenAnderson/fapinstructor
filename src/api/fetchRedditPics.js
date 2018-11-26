@@ -5,6 +5,7 @@ import createNotification from "engine/createNotification";
 import fetchImgur from "./fetchImgur";
 import fetchImgurDirectLink from "./fetchImgur";
 import fetchVReddit from "./fetchVReddit";
+import fetchIReddit from "./fetchIReddit";
 
 let after = {};
 
@@ -36,7 +37,7 @@ const fetchRedditPics = id => {
               return fetchImgur(post.url);
             }
             case "i.redd.it": {
-              return post.url;
+              return fetchIReddit(post);
             }
             case "v.redd.it": {
               return fetchVReddit(post);
@@ -51,6 +52,7 @@ const fetchRedditPics = id => {
       return Promise.all(images);
     })
     .then(images=>images.flat().filter(image => !!image))
+    .then(images=>{console.log('images: ', images); return images;})
     .catch((error) => {
       if(id && !store.config["failedIds"].includes(id)){
          const redditIds = store.config["redditId"];
