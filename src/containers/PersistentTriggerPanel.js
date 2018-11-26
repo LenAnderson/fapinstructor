@@ -9,6 +9,8 @@ import { ruinedOrgasm } from "game/actions/orgasm/ruin";
 import ThumbUp from "material-ui-icons/ThumbUp";
 import ThumbDown from "material-ui-icons/ThumbDown";
 import { nextSlide } from "game/utils/fetchPictures";
+import { listenFor } from "utils/speechRecognition";
+import { stopListeningFor } from "../utils/speechRecognition";
 
 const styles = theme => ({
   root: {
@@ -17,6 +19,14 @@ const styles = theme => ({
 });
 
 class PersistentTriggerPanel extends React.Component {
+  constructor(props) {
+    super(props);
+
+    stopListeningFor("bookmark");
+    stopListeningFor("next");
+    listenFor("bookmark", this.bookmark);
+    listenFor("next", nextSlide);
+  }
   state = {
     ruinedOrgasmDisabled: false
   };
