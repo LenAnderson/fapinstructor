@@ -16,6 +16,8 @@ import { GripStrengthString } from "game/enums/GripStrength";
 import { StrokeStyleString } from "game/enums/StrokeStyle";
 import logo from "images/logo.svg";
 import store from "store";
+import { listenFor } from "utils/speechRecognition";
+import { stopListeningFor } from "../utils/speechRecognition";
 
 const styles = theme => ({
   root: {
@@ -43,6 +45,12 @@ const Label = ({ value }) => (
 );
 
 class StatusPanel extends React.Component {
+  constructor(props) {
+    super(props);
+
+    stopListeningFor("toggle");
+    listenFor("toggle", this.toggle);
+  }
   state = {
     open: true,
     strokeSpeedUnit: "seconds"
@@ -71,6 +79,10 @@ class StatusPanel extends React.Component {
     });
   };
 
+  toggle = () => {
+    this.setState({ open: !this.state.open });
+  }
+
   render() {
     const { open, strokeSpeedUnit } = this.state;
     const {
@@ -95,7 +107,7 @@ class StatusPanel extends React.Component {
           <Button
             color="inherit"
             style={{ textTransform: "none", width: "100%" }}
-            onClick={() => this.setState({ open: !open })}
+            onClick={this.toggle}
           >
             <img style={{ width: 25, marginRight: 10 }} src={logo} alt="Logo" />
             <Typography color="inherit" variant="body2">
