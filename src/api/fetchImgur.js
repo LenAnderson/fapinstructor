@@ -18,9 +18,23 @@ const fetchImgur = async (url) => {
 
 
 
-const fetchImgurDirectLink = (url) => {
+const fetchImgurDirectLink = async (url) => {
     //TODO verify that mp4 always works
-    return url.replace(/\.(gifv|gif)$/, '.mp4');
+    let finalUrl = url.replace(/\.(gifv|gif)$/, '.mp4');
+    if (finalUrl.search(/mp4$/) == -1) {
+        return await new Promise((resolve, reject)=>{
+            let img = new Image();
+            img.addEventListener('load', ()=>{
+                if (img.naturalHeight == 81 && img.naturalWidth == 161) resolve();
+                else resolve(finalUrl);
+            });
+            img.addEventListener('error', ()=>{
+                resolve();
+            });
+            img.src = finalUrl;
+        });
+    }
+    return finalUrl;
 }
 
 
@@ -35,7 +49,7 @@ const fetchImgurAlbum = async (url) => {
             try {
                 let data = JSON.parse(xhr.responseText);
                 if (data.data.images.length > 0) {
-                    resolve(data.data.images.map(it=>fetchImgurDirectLink(it.link)));
+                    resolve(Promise.all(data.data.images.map(it=>fetchImgurDirectLink(it.link))));
                 } else {
                     resolve();
                 }
