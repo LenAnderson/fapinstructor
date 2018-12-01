@@ -6,6 +6,7 @@ import fetchImgur from "./fetchImgur";
 import fetchImgurDirectLink from "./fetchImgur";
 import fetchVReddit from "./fetchVReddit";
 import fetchIReddit from "./fetchIReddit";
+import fetchGiphy from "./fetchGiphy";
 
 let after = {};
 
@@ -43,6 +44,11 @@ const fetchRedditPics = id => {
             }
             case "v.redd.it": {
               return fetchVReddit(post);
+            }
+            case "giphy.com":
+            case "media.giphy.com":
+            case "i.giphy.com": {
+              return fetchGiphy(post.url);
             }
             default: {
               return null;
