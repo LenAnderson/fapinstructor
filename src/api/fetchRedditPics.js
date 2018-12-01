@@ -50,6 +50,9 @@ const fetchRedditPics = id => {
             case "i.giphy.com": {
               return fetchGiphy(post.url);
             }
+            case "66.media.tumblr.com": {
+              return post.url;
+            }
             default: {
               return null;
             }
