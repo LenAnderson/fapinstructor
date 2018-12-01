@@ -12,9 +12,9 @@ let after = {};
 
 const fetchRedditPics = id => {
   let url;
-  if (id.search('/') == -1) {
+  if (id.search('/') === -1) {
     url = `https://www.reddit.com/r/${encodeURIComponent(id)}/hot/.json?after=${after[id] || ""}`;
-  } else if (id.search(/\?/) == -1) {
+  } else if (id.search(/\?/) === -1) {
     url = `https://www.reddit.com${id.replace(/\/$/, '')}/.json?after=${after[id] || ""}`;
   } else {
     url = `https://www.reddit.com${id.replace(/\/?\?/, '/.json?')}&after=${after[id] || ""}`;

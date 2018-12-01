@@ -21,11 +21,11 @@ const fetchImgur = async (url) => {
 const fetchImgurDirectLink = async (url) => {
     //TODO verify that mp4 always works
     let finalUrl = url.replace(/\.(gifv|gif)$/, '.mp4');
-    if (finalUrl.search(/mp4$/) == -1) {
+    if (finalUrl.search(/mp4$/) === -1) {
         return await new Promise((resolve, reject)=>{
             let img = new Image();
             img.addEventListener('load', ()=>{
-                if (img.naturalHeight == 81 && img.naturalWidth == 161) resolve();
+                if (img.naturalHeight === 81 && img.naturalWidth === 161) resolve();
                 else resolve(finalUrl);
             });
             img.addEventListener('error', ()=>{
@@ -40,7 +40,7 @@ const fetchImgurDirectLink = async (url) => {
 
 const fetchImgurAlbum = async (url) => {
     return new Promise(async (resolve, reject) => {
-        let parts = url.replace(/^https?:\/\/[^\/]+/, '').split('/');
+        let parts = url.replace(/^https?:\/\/[^/]+/, '').split('/');
         let id = parts[parts.length-1];
         let xhr = new XMLHttpRequest();
         xhr.open('GET', `https://api.imgur.com/3/album/${id}`, true);
@@ -67,7 +67,7 @@ const fetchImgurAlbum = async (url) => {
 
 const fetchImgurPage = async (url) => {
     return new Promise(async (resolve, reject) => {
-        let parts = url.replace(/^https?:\/\/[^\/]+/, '').split('/');
+        let parts = url.replace(/^https?:\/\/[^/]+/, '').split('/');
         let id = parts[parts.length-1];
         let xhr = new XMLHttpRequest();
         xhr.open('GET', `https://api.imgur.com/3/image/${id}`, true);
