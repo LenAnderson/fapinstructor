@@ -17,6 +17,7 @@ import {
 } from "game/texts/messages";
 import createProbability from "game/utils/createProbability";
 import { applyProbability } from "game/actions/generateAction";
+import { getRandom_youDidGood_message } from "../../texts/teasing_messages";
 
 const SIXTY_SECONDS = 60;  // That's what makes one minute
 const FINAL_EDGE_MIN = 15; // Seconds
@@ -229,10 +230,9 @@ skip.label = "Skip & Add Time";
 export const end = async () => {
   const { maximumOrgasms } = store.config;
   strokerRemoteControl.pause();
-  store.game.orgasms++;
 
   // should continue?
-  if (parseInt(store.game.orgasms, 10) < parseInt(maximumOrgasms, 10)) {
+  if (parseInt(store.game.orgasms, 10) + 1 < parseInt(maximumOrgasms, 10)) {
     setStrokeSpeed(getRandomStrokeSpeed());
     strokerRemoteControl.play();
     createNotification("Start stroking again");
@@ -240,8 +240,11 @@ export const end = async () => {
     await delay(3 * SECONDS_IN_MILLI_SECONDS);
   } else {
     setStrokeSpeed(0);
+    createNotification(getRandom_youDidGood_message(), { autoDismiss: false });
+    await delay(15 * SECONDS_IN_MILLI_SECONDS);
     stopGame();
   }
+  store.game.orgasms++; //has to be done last as the GamePage will turn as soon as this is increased.
 };
 
 /**

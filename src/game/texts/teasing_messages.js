@@ -153,3 +153,21 @@ const teasing_messages = [
   "Mmmm  Keep suffering for me, toy...",
   "Mmmm  Keep suffering for me, slave...",
 ];
+
+/* ########################################### //
+                 Encouragements 
+// ########################################### */
+
+export const getRandom_youDidGood_message = () => {
+  return getRandomMessage(youDidGood_messages);
+};
+
+const youDidGood_messages = [
+  "You did a very good job today, baby...",
+  "You did a very good job today, toy...",
+  "You did a very good job today, slave...",
+  "I already miss you... When will you cum again 3:D",
+  "Thank you for that very interesting time with you, hope to see you soon ._.",
+  ":3 I hope you like the time you had with me, see you next time!",
+  "Bye Bye :)"
+];

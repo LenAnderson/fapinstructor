@@ -64,10 +64,10 @@ export const edgeAdvanced = async (time, message = getRandom_edgeAdvanced_messag
  */
 export const initializeEdgingLadder = async () => {
   store.game.edgingLadder = true;
-  if (store.config.minimumEdges > 3) {
-    store.game.edgingLadderLength = getRandomInclusiveInteger(3, store.config.minimumEdges);
+  if (store.config.minimumEdges > 5) {
+    store.game.edgingLadderLength = getRandomInclusiveInteger(5, store.config.minimumEdges);
   } else {
-    store.game.edgingLadderLength = 3;
+    store.game.edgingLadderLength = 5;
   }
   const messageID = createNotification(getRandom_edgeLadder_message(), false);
 
@@ -100,18 +100,16 @@ export const edgingLadder = async (edgeLadderRung = store.game.edgingLadderRung,
     store.game.edgingLadderCooldowns++;
     await handsOff(30);
   }
-  else {
-    if (edgeLadderRung <= 1) {
-      await executeAction(edge);
-    }
-    else if (edgeLadderRung <= numberOfEdges / 2) {
-      await executeAction(getRandomEdge());
-    }
-    else {
-      await executeAction(getRandomFinalLadderEdge());
-    }
-    store.game.edgingLadderRung++;
+  if (edgeLadderRung <= 1) {
+    await executeAction(edge);
   }
+  else if (edgeLadderRung <= numberOfEdges / 2) {
+    await executeAction(getRandomEdge());
+  }
+  else {
+    await executeAction(getRandomFinalLadderEdge());
+  }
+  store.game.edgingLadderRung++;
 };
 
 /**

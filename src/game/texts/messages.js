@@ -248,3 +248,20 @@ const hurryUp_messages = [
   "faster!"
 ];
 
+
+/* ########################################### //
+                   Questions 
+// ########################################### */
+
+export const getRandom_didYouCum_message = () => {
+  return getRandomMessage(didYouCum_messages);
+};
+
+const didYouCum_messages = [
+  "Did you cum, my obedient little toy?",
+  "Did you cum?",
+  "Did you cum for your Mistress?",
+  "Now, my little toy, tell me honestly: Did you cum?",
+  "I demand you to tell me the truth: Did you manage to cum?"
+];
+

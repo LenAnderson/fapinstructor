@@ -65,6 +65,8 @@ class Notification extends React.Component {
 
     const clickable = autoDismiss && time === 0;
 
+    // This below is the Notification-Style
+
     return (
       <Slide in={true} direction="right">
         <div className={classes.root}>
@@ -83,7 +85,7 @@ class Notification extends React.Component {
             onClick={clickable ? onDismiss : null}
           >
             <Icon className={classes.icon} />
-            <Typography variant="body2" color="inherit" noWrap>
+            <Typography variant="body2" color="inherit">
               {title}
             </Typography>
           </div>

@@ -1,5 +1,5 @@
 import store from "store";
-import createNotification, { dismissNotification } from "engine/createNotification";
+import createNotification, { dismissAllNotifications, dismissNotification } from "engine/createNotification";
 import { setStrokeSpeed } from "game/utils/strokeSpeed";
 import delay from "utils/delay";
 import play from "engine/audio";
@@ -8,6 +8,7 @@ import { getRandomInclusiveInteger } from "utils/math";
 import { doOrgasm, end, postOrgasmTorture, skip } from "game/actions/orgasm/orgasm";
 import punishment from "game/actions/punishment";
 import {
+  getRandom_didYouCum_message,
   getRandom_hurryUp_message,
   getRandom_orgasm_message,
   getRandom_orgasmAdvanced_message,
@@ -156,13 +157,84 @@ export const doOrgasmAdvancedInTime = async () => {
  * @returns {Promise<void>}
  */
 export const doOrgasmCountdown = async () => {
-  //TODO: Implement // I Need help @thefapinstructor I intend a implementation like:
-  // for (let i = 10; i >= 0; i--) {
-  //   displayNumber(i);
-  //   const time = getRandomInclusiveInteger(1, 5);
-  //   await delay(time * 1000);
-  // }
-};
+    //TODO: More FANCY Countdown Numbers, displayed across the whole screen
+    //Introduction
+    const message1 = "You now will eventually be allowed to cum, but only if you manage to time it perfectly.   " +
+      "I'm going to count you down from 10 to 0. Be ready to cum at 0. Not sooner nor later!";
+    const nID1 = createNotification(message1, { autoDismiss: false });
+    await delay(10 * 1000);
+    dismissNotification(nID1);
+
+    const message2 = "You may from now on stroke with any pace you like ...         Lets get started!";
+    const nID2 = createNotification(message2, { autoDismiss: false });
+    setStrokeSpeed(0);
+    await delay(8 * 1000);
+    dismissNotification(nID2);
+
+    for (let i = 10; i >= 8; i--) {
+      // displayNumber(i);
+      const nID = createNotification(i, { autoDismiss: false });
+      const time = getRandomInclusiveInteger(2, 8);
+      await delay(time * 1000);
+      dismissNotification(nID);
+    }
+
+    for (let i = 7; i >= 6; i--) {
+      // displayNumber(i);
+      const nID = createNotification(i, { autoDismiss: false });
+      const time = getRandomInclusiveInteger(8, 30);
+      await delay(time * 1000);
+      dismissNotification(nID);
+    }
+
+    for (let i = 5; i >= 2; i--) {
+      // displayNumber(i);
+      const nID = createNotification(i, { autoDismiss: false });
+      const time = getRandomInclusiveInteger(1, 10);
+      await delay(time * 1000);
+      dismissNotification(nID);
+    }
+    const nID3 = createNotification("1     ... get ready!", { autoDismiss: false });
+    const time = getRandomInclusiveInteger(7, 30);
+    await delay(time * 1000);
+    dismissNotification(nID3);
+
+    const cumTime = getRandomInclusiveInteger(8, 55);
+  createNotification("0 !     Cum! Now!", { time: cumTime * 1000 });
+    if (store.config.enableVoice) {
+      play(getRandomAudioVariation("Orgasm"));
+    }
+    if (cumTime > 20) {
+      createNotification("No need to hurry today. Relax and keep on stroking till you cum.", { autoDismiss: false })
+    }
+    await delay(cumTime * 1000);
+    dismissAllNotifications();
+
+    // So far for the bildup. Now lets check whether the user did or didn't cum.
+
+    const didYouCUmMsg = getRandom_didYouCum_message();
+
+    const didYouID = createNotification(didYouCUmMsg);
+
+    const trigger_done = async () => {
+      dismissNotification(didYouID);
+      await postOrgasmTorture();
+      await end();
+    };
+    trigger_done.label = "Orgasmed";
+
+    const trigger_fail = async () => {  // Increase game time on fail.
+      dismissNotification(didYouID);
+      await punishment();
+      await skip();
+    };
+    trigger_fail.label = "I am so sorry, but I couldn't";
+
+    return [trigger_done, trigger_fail];
+
+
+  }
+;
 /**
  * TODO: Implement further advanced version.
  * @returns {Promise<void>}
@@ -194,6 +266,7 @@ export const getRandomOrgasm = () => {
 export const initializeOrgasms = () =>
   [
     // list of all available orgasms
+    createProbability(doOrgasmCountdown, 10),
     createProbability(doOrgasmAdvancedInTime, 10),
     createProbability(doOrgasmInTime, 10),
     createProbability(doOrgasmAdvanced, 10),
