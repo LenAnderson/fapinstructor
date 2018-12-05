@@ -146,7 +146,7 @@ class GamePage extends React.Component {
 
     const {
       game: { orgasms, mediaPlayerUrl },
-      config: { maximumOrgasms, slideDuration, videoMuted }
+      config: { maximumOrgasms, slideDuration, loopShortVideos, videoMuted }
     } = this.props;
 
     return (
@@ -160,6 +160,7 @@ class GamePage extends React.Component {
               url={mediaPlayerUrl}
               onEnded={nextSlide}
               duration={slideDuration}
+              loopShortVideos={loopShortVideos}
               muted={videoMuted}
             />
           </React.Fragment>

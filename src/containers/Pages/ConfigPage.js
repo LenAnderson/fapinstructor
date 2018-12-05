@@ -487,6 +487,18 @@ class ConfigPage extends React.Component {
                   </FormControl>
                 </Grid>
                 <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={store.config.loopShortVideos}
+                        onChange={this.handleCheckChange("loopShortVideos")}
+                        value="loopShortVideos"
+                      />
+                    }
+                    label="Loop Short Videos"
+                  />
+                </Grid>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required

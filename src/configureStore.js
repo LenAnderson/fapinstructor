@@ -17,6 +17,7 @@ const defaultConfig = {
   pictures: true,
   videos: true,
   slideDuration: 10, // sec
+  loopShortVideos: false,
   enableVoice: true,
   enableMoans: true,
   videoMuted: false,

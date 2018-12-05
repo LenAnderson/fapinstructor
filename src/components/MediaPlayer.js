@@ -176,6 +176,20 @@ const isVideo = url =>
 const isYouTube = url => url.includes("www.youtube-nocookie.com");
 
 class MediaPlayer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.playCount = 0;
+  }
+
+  repeatForDuration(evt) {
+    if (this.props.loopShortVideos && evt.target.duration * (++this.playCount) < this.props.duration) {
+      evt.target.play();
+    } else {
+      this.playCount = 0;
+      this.props.onEnded(evt);
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (isImage(nextProps.url)) {
       if (this.props.url !== nextProps.url || !this.timeout) {
@@ -199,7 +213,7 @@ class MediaPlayer extends React.Component {
           autoPlay
           muted={muted}
           onError={onEnded}
-          onEnded={onEnded}
+          onEnded={this.repeatForDuration.bind(this)}
         />
       );
     } else if (isImage(url)) {
