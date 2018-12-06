@@ -18,10 +18,10 @@ const addLoops = (...newLoops) => {
   });
 };
 
-const startGame = () => {
+const startGame = async () => {
   configureStore();
   createAudioContext();
-  nextSlide();
+  await nextSlide();
   addLoops(actionLoop, strokerLoop, moanLoop);
 };
 
